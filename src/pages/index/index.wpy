@@ -1,0 +1,161 @@
+<style>
+    .vol-swiper {
+        height: 100%;
+    }
+
+    .vol-swiper-item {
+        padding: 25 rpx;
+        box-sizing: border-box;
+    }
+
+    .vol-card {
+        padding: 20rpx;
+        border: 1px solid #ebebeb;
+        border-radius: 3px;
+        box-shadow: 1px 1px 1px #ebebeb;
+    }
+
+    .vol-picture {
+        width: 100%;
+    }
+
+    .vol-meta {
+        padding: 10rpx 5rpx;
+        font-size: 12px;
+        color: #888;
+    }
+
+    .vol-author {
+        float: right;
+    }
+
+    .vol-content {
+        margin-top: 30rpx;
+        padding: 0 5rpx;
+        font-size: 14px;
+        line-height: 1.4;
+    }
+
+    .vol-content-text {
+        width: 100%;
+        min-height: 200rpx;
+        display: inline-block;
+    }
+
+    .vol-makettime {
+        font-size: 12px;
+        color:  #888;
+        text-align: right;
+    }
+    .vol-swiper-item {
+        padding: 25 rpx;
+        box-sizing: border-box;
+    }
+</style>
+<template>
+    <view class="container">
+        <swiper class="vol-swiper" current="{{current}}" bindchange="handleChange">
+            <block wx:for="{{vols}}" wx:for-index="idx" wx:for-item="item" wx:key="{{hpcontent_id}}">
+                <swiper-item class="vol-swiper-item">
+                    <view class="vol-card">
+                        <image class="vol-picture" src="{{item.hp_img_url}}" mode="aspectFill"></image>
+                        <view class="vol-meta">
+                            <text class="vol-number">{{item.hp_title}}</text>
+                            <text class="vol-author">{{item.hp_author}}</text>
+                        </view>
+                        <view class="vol-content">
+                            <text class="vol-content-text">{{item.hp_content}}</text>
+                        </view>
+                        <view class="vol-makettime">
+                            <text class="vol-makettime-text">{{item.hp_makettime}}</text>
+                        </view>
+                    </view>
+                </swiper-item>
+            </block>
+            <swiper-item></swiper-item>
+        </swiper>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import api from '../../api/api.js'
+    import util from '../../utils/util.js'
+
+
+    export default class Index extends wepy.page {
+        config = {
+
+        };
+
+        components = {
+
+        };
+
+
+        data = {
+            vols: [],
+            current: 0
+        };
+
+        methods = {
+
+        };
+
+        getVols = function (idList) {
+            let vols = this.vols;
+            if (idList.length > 0) {
+                api.getVolById({
+                    query: {
+                        id: idList.shift()
+                    },
+                    success: (res) => {
+                        if (res.data.res === 0) {
+                            let vol = res.data.data;
+                            vol.hp_makettime = util.formatMakettime(vol.hp_makettime);
+                            vols.push(vol);
+                        }
+                        this.getVols(idList)
+                    }
+                })
+            } else {
+                this.setData({ vols });
+            }
+        };
+        handleChange = function (e) {
+            let current = e.detail.current;
+            let volsLength = this.vols.length;
+            if (current === volsLength) {
+                this.setData({
+                    current: volsLength
+                });
+                wx.navigateTo({
+                    url: '../history/history?page=index',
+                    success: () => {
+                        this.setData({
+                            current: volsLength - 1
+                        })
+                    }
+                })
+            }
+        };
+
+        events = {
+
+        };
+        async onLoad() {
+            try {
+                await api.getVolIdList({
+                    success: (res) => {
+                        if (res.data.res === 0) {
+                            let idList = res.data.data;
+                            this.getVols(idList)
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error(error.stack);
+            }
+        }
+    }
+</script>

@@ -1,0 +1,95 @@
+<style>
+    .vol-card {
+        padding: 20rpx;
+        border: 1px solid #ebebeb;
+        border-radius: 3px;
+        box-shadow: 1px 1px 1px #ebebeb;
+    }
+
+    .vol-picture {
+        width: 100%;
+    }
+
+    .vol-meta {
+        padding: 10rpx 5rpx;
+        font-size: 12px;
+        color: #888;
+    }
+
+    .vol-author {
+        float: right;
+    }
+
+    .vol-content {
+        margin-top: 30rpx;
+        padding: 0 5rpx;
+        font-size: 14px;
+        line-height: 1.4;
+    }
+
+    .vol-content-text {
+        width: 100%;
+        min-height: 200rpx;
+        display: inline-block;
+    }
+
+    .vol-makettime {
+        font-size: 12px;
+        color:  #888;
+        text-align: right;
+    }
+    .vol-swiper-item {
+        padding: 25 rpx;
+        box-sizing: border-box;
+    }
+</style>
+<template>
+    <block wx:for="{{list}}" wx:for-index="idx" wx:for-item="item" wx:key="{{hpcontent_id}}">
+        <swiper-item class="vol-swiper-item">
+          <view class="vol-card">
+            <image class="vol-picture" src="{{item.hp_img_url}}" mode="aspectFill"></image>
+            <view class="vol-meta">
+                <text class="vol-number">{{item.hp_title}}</text>
+                <text class="vol-author">{{item.hp_author}}</text>
+            </view>
+            <view class="vol-content">
+                <text class="vol-content-text">{{item.hp_content}}</text>
+            </view>
+            <view class="vol-makettime">
+                <text class="vol-makettime-text">{{item.hp_makettime}}</text>
+            </view>
+        </view>
+        </swiper-item>
+    </block>
+</template>
+
+<script>
+    import wepy from 'wepy';
+
+    export default class VolList extends wepy.component {
+        props = {
+            list:{
+                type: [],
+                default: [],
+            }
+        };
+
+        data = {
+
+        };
+
+        methods = {
+        };
+
+        onLoad () {
+            console.log(this.list)
+        };
+
+        load (list) {
+            this.list = list;
+            this.$apply();
+        }
+
+
+    }
+</script>

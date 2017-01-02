@@ -1,0 +1,190 @@
+<style>
+    .carousel {
+        height: 150px;
+    }
+
+    .carousel-cover {
+        width: 100%;
+        height: 150px;
+    }
+
+    .articles-swiper {
+        height: calc(100% - 150px);
+    }
+
+    .articles {
+        width: calc(100% + 30rpx);
+        height: 100%;
+    }
+
+    .articles-card {
+        margin: 20rpx 50rpx 20rpx 20rpx;
+        border: 1px solid #ebebeb;
+        border-radius: 3px;
+    }
+
+    .article-item {
+        padding: 30rpx;
+    }
+
+    .article-header {
+        margin-bottom: 5px;
+    }
+
+    .article-title {
+        width: 80%;
+        display: inline-block;
+        font-size: 16px;
+        line-height: 22px;
+    }
+
+    .article-type {
+        float: right;
+        font-size: 10px;
+        font-weight: 200;
+        padding: 5px 5px 5px 8px;
+        color: #89bdf7;
+        border: 1px solid #89bdf7;
+        border-radius: 5px;
+        letter-spacing: 3px;
+    }
+
+    .article-author {
+        margin-top: 10px;
+        font-size: 14px;
+    }
+
+    .article-content {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+</style>
+<template>
+    <view class="container">
+        <swiper class="carousel" indicator-dots="true" autoplay="true">
+            <block wx:for="{{carousel}}" wx:key="{{id}}">
+                <swiper-item>
+                    <view class="carousel-item">
+                        <image class="carousel-cover" src="{{item.cover}}" mode="scaleToFill"></image>
+                    </view>
+                </swiper-item>
+            </block>
+        </swiper>
+
+        <swiper class="articles-swiper" current="{{current}}" bindchange="handleChange">
+            <block wx:for="{{articles.essay}}" wx:for-index="idx" wx:key="{{content_id}}">
+                <swiper-item class="articles-swiper-item">
+                    <scroll-view class="articles" scroll-y="true">
+                        <view class="articles-card">
+                            <import src="templates/essayItem.wxml"/>
+                            <template is="essay-item" data="{{item: articles['essay'][idx]}}"/>
+
+                            <import src="templates/serialItem.wxml"/>
+                            <template is="serial-item" data="{{item: articles['serial'][idx]}}"/>
+
+                            <import src="templates/questionItem.wxml"/>
+                            <template is="question-item" data="{{item: articles['question'][idx]}}"/>
+                        </view>
+                    </scroll-view>
+                </swiper-item>
+            </block>
+            <swiper-item></swiper-item>
+        </swiper>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import api from '../../api/api.js'
+
+    export default class Reading extends wepy.page {
+
+        config = {
+
+        };
+        components = {
+
+        };
+
+        data = {
+            carousel: [],
+            articles: {},
+            current: 0
+        };
+
+        methods = {
+
+        };
+
+        events = {
+
+        };
+        async onLoad() {
+            let that = this;
+            await api.getCarousel({
+                success:  (res) => {
+                    if (res.data.res === 0) {
+                        let carousel = res.data.data;
+                        that.carousel = carousel;
+                        that.setData({ carousel : carousel });
+                    }
+                }
+            });
+
+            await api.getLastArticles({
+                success: (res) => {
+                    if (res.data.res === 0) {
+                        let articles = res.data.data;
+                        that.articles = articles;
+                        that.setData({ articles : articles });
+                    }
+                }
+            });
+        };
+
+
+        onReady() {
+            wx.setNavigationBarTitle({
+                title: '阅读'
+            })
+        };
+
+        tapEssay (e) {
+            let id = e.currentTarget.dataset.id;
+            wx.navigateTo({
+                url: 'essay?id=' + id
+            })
+        };
+        tapSerial (e) {
+            let id = e.currentTarget.dataset.id;
+            wx.navigateTo({
+                url: 'serial?id=' + id
+            })
+        };
+
+        tapQuestion (e) {
+            let id = e.currentTarget.dataset.id;
+            wx.navigateTo({
+                url: 'question?id=' + id
+            })
+        };
+        handleChange (e) {
+            let current = e.detail.current;
+            let length = this.data.articles.essay.length;
+
+            if (current === length) {
+                this.setData({
+                    current: length
+                });
+                wx.navigateTo({
+                    url: '../history?page=reading',
+                    success: () => {
+                        this.setData({
+                            current: length - 1
+                        })
+                    }
+                })
+            }
+        }
+    }
+</script>

@@ -1,0 +1,97 @@
+<style>
+    .movies {
+        height: 100%;
+    }
+
+    .movie {
+        position: relative;
+        margin-bottom: 5px;
+    }
+
+    .movie-cover {
+        width: 100%;
+        height: 160px;
+        box-shadow: 0 2px 2px #ebebeb;
+    }
+
+    .movie-score {
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        font-size: 28px;
+        color: #f00;
+    }
+</style>
+<template>
+    <view class="container">
+        <scroll-view class="movies" scroll-y="true" bindscrolltolower="getMovies">
+            <view wx:for="{{movies}}" class="movie" wx:key="id" data-id="{{item.id}}" bindtap="getDetail">
+                <image class="movie-cover" src="{{item.cover}}" mode="scaleToFill"></image>
+                <view class="movie-score">
+                    <text>{{item.score || '无'}}</text>
+                </view>
+            </view>
+        </scroll-view>
+    </view>
+
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import api from '../../api/api.js'
+
+    export default class Index extends wepy.page {
+
+        config = {
+            "navigationBarTitleText": "电影"
+        };
+        components = {
+
+        };
+
+
+        data = {
+            movies: [],
+            lastId: 0
+        };
+        methods = {
+
+        };
+
+        events = {
+
+        };
+        async onLoad() {
+            this.getMovies();
+        };
+        getMovies () {
+            let that = this;
+            let lastId = this.data.lastId;
+            if (lastId >= 0) {
+                api.getMovieListById({
+                    query: {
+                        id: lastId
+                    },
+                    success: (res) => {
+                    if (res.data.res === 0) {
+                        let moreMovies = res.data.data;
+                        let length = moreMovies.length;
+                        let lastId = length ? moreMovies[length - 1].id : -1;
+
+                        let movies = this.data.movies.concat(moreMovies);
+                        that.movies = movies;
+                        that.lastId = lastId;
+                        that.setData({ movies, lastId })
+                    }
+                }
+            })
+            }
+        };
+        getDetail (e) {
+            let id = e.currentTarget.dataset.id;
+            wx.navigateTo({
+                url: 'detail?id=' + id
+            })
+        }
+    }
+</script>

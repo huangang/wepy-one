@@ -1,0 +1,36 @@
+<style lang="less">
+</style>
+<template>
+    <view class="container">
+        {{msg}}
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+
+    export default class Example extends wepy.page {
+
+        config = {
+            "navigationBarTitleText": "example"
+        };
+        components = {
+
+        };
+
+
+        data = {
+            msg: 'hello world'
+        };
+        methods = {
+
+        };
+
+        events = {
+
+        };
+        async onLoad() {
+            console.log(this.msg);
+        }
+    }
+</script>

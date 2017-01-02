@@ -1,0 +1,115 @@
+<style>
+    .question {
+        margin: 15px;
+        line-height: 1.5;
+        border-bottom: 1px solid #ebebeb;
+    }
+
+    .question-title {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+
+    .question-content {
+        font-size: 13px;
+        margin-bottom: 15px;
+    }
+
+    .answer {
+        margin: 15px;
+    }
+
+    .answer-header {
+        margin-top: 20px;
+        margin-bottom: 15px;
+    }
+
+    .answer-title {
+        display: inline-block;
+        font-size: 14px;
+    }
+
+    .answer-makettime {
+        float: right;
+        color: #888;
+        font-size: 12px;
+    }
+
+    .answer-content {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+</style>
+<template>
+    <view class="container">
+        <view class="question">
+            <view class="question-title">
+                <text>{{question.question_title}}</text>
+            </view>
+            <view class="question-content">
+                <text>{{question.question_content}}</text>
+            </view>
+        </view>
+        <view class="answer">
+            <view class="answer-header">
+                <view class="answer-title">
+                    <text>{{question.answer_title}}</text>
+                </view>
+                <view class="answer-makettime">
+                    <text>{{question.question_makettime}}</text>
+                </view>
+            </view>
+            <view class="answer-content">
+                <text>{{question.answer_content}}</text>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import api from '../../api/api.js'
+    import util from '../../utils/util.js'
+    export default class Question extends wepy.page {
+
+        config = {
+
+        };
+        components = {
+
+        };
+
+        data = {
+            question: {}
+        };
+        methods = {
+
+        };
+
+        events = {
+
+        };
+        async onLoad(options) {
+            let that = this;
+            api.getQuestionById({
+                query: {
+                    id: options.id
+                },
+                success: (res) => {
+                    if (res.data.res === 0) {
+                        let question = res.data.data;
+                        question.answer_content = util.filterContent(question.answer_content);
+                        question.question_makettime = util.formatMakettime(question.question_makettime);
+                        that.question = question;
+                        that.setData({ question })
+                    }
+                }
+            })
+        };
+        onReady () {
+            wx.setNavigationBarTitle({
+                title: '问题'
+            })
+        }
+    }
+</script>

@@ -1,0 +1,91 @@
+<style>
+    .vol-card {
+        padding: 20rpx;
+        margin: 25rpx;
+        border: 1px solid #ebebeb;
+        border-radius: 3px;
+        box-shadow: 1px 1px 1px #ebebeb;
+    }
+
+    .vol-picture {
+        width: 100%;
+    }
+
+    .vol-meta {
+        padding: 10rpx 5rpx;
+        font-size: 12px;
+        color: #888;
+    }
+
+    .vol-author {
+        float: right;
+    }
+
+    .vol-content {
+        margin-top: 30rpx;
+        padding: 0 5rpx;
+        font-size: 14px;
+        line-height: 1.4;
+    }
+
+    .vol-content-text {
+        width: 100%;
+        height: 200rpx;
+        display: inline-block;
+    }
+
+    .vol-makettime {
+        font-size: 12px;
+        color:  #888;
+        text-align: right;
+    }
+</style>
+<template>
+    <view class="container">
+        <import src="templates/volItem.wxml"/>
+        <template is="vol-item" data="{{item: detail}}"/>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import api from '../../api/api.js'
+    import util from '../../utils/util.js'
+    export default class Detail extends wepy.page {
+
+        config = {
+            "navigationBarTitleText": "图文"
+        };
+        components = {
+
+        };
+
+
+        data = {
+            detail: []
+        };
+        methods = {
+
+        };
+
+        events = {
+
+        };
+        async onLoad(options) {
+            let that = this;
+            api.getVolDetailById({
+                query: {
+                    id: options.id
+                },
+                success: (res) => {
+                    if (res.data.res === 0) {
+                        let detail = res.data.data;
+                        detail.hp_makettime = util.formatMakettime(detail.hp_makettime);
+                        that.detail = detail;
+                        that.setData({ detail })
+                    }
+                }
+            })
+        }
+    }
+</script>

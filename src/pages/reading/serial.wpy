@@ -1,0 +1,124 @@
+<style>
+    .serial {
+        padding: 15px;
+    }
+
+    .serial-author {
+        display: inline-block;
+        width: 80%;
+        margin-bottom: 10px;
+        font-weight: 200;
+        font-size: 12px;
+    }
+
+    .serial-author-avatar {
+        width: 40px;
+        height: 40px;
+        float: left;
+        margin-right: 15rpx;
+        border-radius: 50%;
+    }
+
+    .serial-author-username {
+        padding: 5px;
+        color: #89bdf7;
+    }
+
+    .serial-makettime {
+        margin-top: 3px;
+        color: #888;
+    }
+
+    .serial-title {
+        margin-top: 10px;
+        margin-bottom: 20px;
+        font-size: 18px;
+    }
+
+    .serial-content {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .serial-charge-edt {
+        margin-top: 20px;
+        color: #888;
+        font-size: 12px;
+    }
+</style>
+<template>
+    <view class="container">
+        <view class="serial">
+            <view class="serial-header">
+                <view class="serial-author">
+                    <image class="serial-author-avatar" src="{{serial.author.web_url}}"></image>
+                    <view class="serial-author-username">
+                        <text>{{serial.author.user_name}}</text>
+                    </view>
+                    <view class="serial-makettime">
+                        <text>{{serial.maketime}}</text>
+                    </view>
+                </view>
+            </view>
+            <view class="serial-body">
+                <view class="serial-title">
+                    <text>{{serial.title}}</text>
+                </view>
+                <view class="serial-content">
+                    <text>{{serial.content}}</text>
+                </view>
+                <view class="serial-charge-edt">
+                    <text>{{serial.charge_edt}}</text>
+                </view>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import api from '../../api/api.js'
+    import util from '../../utils/util.js'
+
+    export default class Serial extends wepy.page {
+
+        config = {
+
+        };
+        components = {
+
+        };
+        data = {
+            serial: {}
+        };
+        methods = {
+
+        };
+
+        events = {
+
+        };
+        async onLoad(options) {
+            let that = this;
+            api.getSerialById({
+                query: {
+                    id: options.id
+                },
+                success: (res) => {
+                    if (res.data.res === 0) {
+                        let serial = res.data.data;
+                        serial.content = util.filterContent(serial.content);
+                        serial.maketime = util.formatMakettime(serial.maketime);
+                        that.serial = serial;
+                        that.setData({ serial })
+                    }
+                }
+            })
+        };
+        onReady () {
+            wx.setNavigationBarTitle({
+                title: '连载'
+            })
+        }
+    }
+</script>

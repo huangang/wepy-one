@@ -1,0 +1,143 @@
+<style>
+    .container {
+        border-top: 0;
+    }
+
+    .types {
+        width: 100%;
+        height: 15px;
+        position: fixed;
+        display: flex;
+        padding: 10px 0;
+        border-top: 1px solid #ebebeb;
+        background-color: #fff;
+        z-index: 10;
+    }
+
+    .fix-fixed {
+        width: 100%;
+        height: 30px;
+    }
+
+    .type-item {
+        flex: 1;
+        font-size: 14px;
+        text-align: center;
+    }
+
+    .seleted {
+        color: #89bdf7;
+    }
+
+    .history-bymonth {
+        height: 20px;
+        padding: 10px;
+        margin: 0 20rpx;
+        border-bottom: 1px solid #ebebeb;
+    }
+
+    .history-date {
+        color: #888;
+        font-size: 14px;
+        line-height: 20px;
+    }
+
+    .forward {
+        width: 20px;
+        height: 20px;
+        float: right;
+    }
+</style>
+<template>
+    <view class="container">
+        <view wx:if="{{page === 'reading'}}">
+            <view class="types">
+                <view wx:for="{{types}}" class="type-item" wx:key="type">
+                    <text wx:if="{{type === item.type}}" class="seleted">{{item.name}}</text>
+                    <text wx:else data-type="{{item.type}}" bindtap="setType">{{item.name}}</text>
+                </view>
+            </view>
+            <view class="fix-fixed"></view>
+        </view>
+        <scroll-view scroll-y="true">
+            <block wx:for="{{dateList}}" wx:key="value">
+                <view class="history-bymonth" data-month="{{item.value}}" data-title="{{item.title}}" bindtap="getMonthly">
+                    <text class="history-date">{{item.title}}</text>
+                    <image class="forward" src="../../images/forward.png"></image>
+                </view>
+            </block>
+        </scroll-view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import util from '../../utils/util.js';
+
+    export default class Index extends wepy.page {
+
+        config = {
+            "navigationBarTitleText": "往期列表"
+        };
+        components = {
+
+        };
+
+
+        data = {
+            dateList: [],
+            types: [
+                {
+                    type: 'essay',
+                    name: '短篇'
+                },
+                {
+                    type: 'serialcontent',
+                    name: '连载'
+                },
+                {
+                    type: 'question',
+                    name: '问题'
+                }
+            ],
+            page: 'index',
+            type: 'essay'
+        };
+        methods = {
+
+        };
+
+        events = {
+
+        };
+        async onLoad(options) {
+            let page = options.page;
+            let dateList = util.getDateList(page);
+            this.dateList = dateList;
+            this.page = page;
+            this.setData({
+                page: page,
+                dateList: dateList
+            })
+        };
+        setType (e) {
+            let type = e.target.dataset.type;
+            let dateList = util.getDateList(type);
+            this.dateList = dateList;
+            this.type = type;
+            this.setData({
+                dateList: dateList,
+                type: type
+            })
+        };
+        getMonthly (e) {
+            let month = e.target.dataset.month;
+            let title = e.target.dataset.title;
+            let page = this.data.page;
+            let type = this.data.type;
+            wx.navigateTo({
+                url: `../${page}/monthly?type=${type}&title=${title}&month=${month}`
+            })
+        }
+    }
+</script>

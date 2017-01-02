@@ -1,0 +1,151 @@
+<style>
+    .movie-video {
+        width: 100%;
+    }
+
+    .video {
+        width: 100%;
+        height: 180px;
+    }
+
+    .movie-story-header {
+        height: 30px;
+        padding-left: 10px;
+        font-size: 12px;
+        line-height: 30px;
+        color:  #888;
+        background-color: #eee;
+    }
+
+    .movie-story-body {
+        padding: 15px;
+    }
+
+    .story-author {
+        display: inline-block;
+        width: 80%;
+        margin-bottom: 10px;
+        font-weight: 200;
+        font-size: 12px;
+    }
+
+    .story-author-avatar {
+        width: 30px;
+        height: 30px;
+        float: left;
+        margin-right: 15rpx;
+        border-radius: 50%;
+    }
+
+    .story-author-username {
+        padding: 2px;
+        color: #89bdf7;
+    }
+
+    .story-makettime {
+        margin-top: 3px;
+        color: #888;
+    }
+
+    .story-title {
+        margin: 10px 0;
+        font-size: 18px;
+    }
+
+    .story-content {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+</style>
+<template>
+    <view class="container">
+        <view class="movie-video">
+            <video class="video" src="{{detail.video}}" controls></video>
+        </view>
+        <view class="movie-story">
+            <view class="movie-story-header">
+                <text>电影故事</text>
+            </view>
+            <view class="movie-story-body">
+                <view class="story-header">
+                    <view class="story-author">
+                        <image class="story-author-avatar" src="{{story.user.web_url}}"></image>
+                        <view class="story-author-username">
+                            <text>{{story.user.user_name}}</text>
+                        </view>
+                        <view class="story-makettime">
+                            <text>{{story.input_date}}</text>
+                        </view>
+                    </view>
+                </view>
+                <view class="story-body">
+                    <view class="story-title">
+                        <text>{{story.title}}</text>
+                    </view>
+                    <view class="story-content">
+                        <text>{{story.content}}</text>
+                    </view>
+                </view>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import api from '../../api/api.js'
+    import util from '../../utils/util.js'
+    export default class Detail extends wepy.page {
+
+        config = {
+
+        };
+        components = {
+
+        };
+
+
+        data = {
+            detail: [],
+            story: {}
+        };
+        methods = {
+
+        };
+
+        events = {
+
+        };
+        async onLoad(options) {
+            let that = this;
+            let id = options.id;
+            api.getMovieDetailById({
+                query: {
+                    id: id
+                },
+                success: (res) => {
+                    if (res.data.res === 0) {
+                        let detail = res.data.data;
+                        that.detail = detail;
+                        that.setData({ detail })
+                    }
+                }
+            });
+
+            api.getMovieStoryById({
+                query: {
+                    id: id
+                },
+                success: (res) => {
+                    if (res.data.res === 0) {
+                        let story = res.data.data.data[0];
+                        story.content = util.filterContent(story.content);
+                        story.input_date = util.formatMakettime(story.input_date);
+                        that.story = story;
+                        that.setData({ story })
+                    }
+                }
+            })
+        }
+    }
+</script>

@@ -1,0 +1,140 @@
+<style>
+    .container {
+        border-bottom: 0;
+    }
+
+    .article-item {
+        padding: 10px 15px;
+    }
+
+    .article-header {
+        margin-bottom: 5px;
+    }
+
+    .article-title {
+        width: 80%;
+        display: inline-block;
+        font-size: 16px;
+        line-height: 22px;
+    }
+
+    .article-type {
+        float: right;
+        font-size: 10px;
+        font-weight: 200;
+        padding: 5px 5px 5px 8px;
+        color: #89bdf7;
+        border: 1px solid #89bdf7;
+        border-radius: 5px;
+        letter-spacing: 3px;
+    }
+
+    .article-author {
+        margin-top: 10px;
+        font-size: 14px;
+    }
+
+    .article-content {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+</style>
+<template>
+    <view class="container">
+        <view class="articles">
+            <block wx:if="{{type === 'essay'}}" wx:for="{{articles}}" wx:key="content_id">
+                <import src="templates/essayItem.wxml"/>
+                <template is="essay-item" data="{{item: item}}"/>
+            </block>
+
+            <block wx:if="{{type === 'serialcontent'}}" wx:for="{{articles}}" wx:key="id">
+                <import src="templates/serialItem.wxml"/>
+                <template is="serial-item" data="{{item: item}}"/>
+            </block>
+
+            <block wx:if="{{type === 'question'}}" wx:for="{{articles}}" wx:key="question_id">
+                <import src="templates/questionItem.wxml"/>
+                <template is="question-item" data="{{item: item}}"/>
+            </block>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import api from '../../api/api.js'
+
+    export default class Monthly extends wepy.page {
+
+        config = {
+
+        };
+        components = {
+
+        };
+
+
+
+        data = {
+            type: '',
+            title: '',
+            articles: []
+        };
+        methods = {
+
+        };
+
+        events = {
+
+        };
+        async onLoad(options) {
+            let that = this;
+            this.setData({
+                title: options.title
+            });
+
+            let { type, month } = options;
+            api.getArticlesByMonth({
+                query: {
+                    type: type,
+                    month: month
+                },
+                success: (res) => {
+                    if (res.data.res === 0) {
+                        let articles = res.data.data;
+                        that.type = type;
+                        that.articles = articles;
+                        that.setData({
+                            type: type,
+                            articles: articles
+                        })
+                    }
+                }
+            })
+        };
+
+        onReady () {
+            wx.setNavigationBarTitle({
+                title: this.data.title
+            })
+        };
+        tapEssay (e) {
+            let id = e.currentTarget.dataset.id;
+            wx.navigateTo({
+                url: '../essay/essay?id=' + id
+            })
+        };
+        tapSerial (e) {
+            let id = e.currentTarget.dataset.id;
+            wx.navigateTo({
+                url: '../serial/serial?id=' + id
+            })
+        };
+        tapQuestion (e) {
+            let id = e.currentTarget.dataset.id;
+            wx.navigateTo({
+                url: '../question/question?id=' + id
+            })
+        };
+    }
+</script>

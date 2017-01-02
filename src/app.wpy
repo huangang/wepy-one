@@ -1,0 +1,91 @@
+<style lang="less">
+/**app.wxss**/
+page {
+    height: 100%;
+}
+.container {
+    height: 100%;
+    border-top: 1px solid #ebebeb;
+    border-bottom: 1px solid #ebebeb;
+    box-sizing: border-box;
+}
+</style>
+
+<script>
+
+import wepy from 'wepy';
+import "babel-polyfill";
+
+export default class extends wepy.app {
+
+    config = {
+        "pages":[
+            "pages/index/index",
+            "pages/index/monthly",
+            "pages/index/detail",
+            "pages/reading/index",
+            "pages/reading/monthly",
+            "pages/reading/essay",
+            "pages/reading/serial",
+            "pages/reading/question",
+            "pages/music/index",
+            "pages/music/monthly",
+            "pages/music/detail",
+            "pages/movie/index",
+            "pages/movie/detail",
+            "pages/history/index"
+        ],
+        "window":{
+            "backgroundTextStyle":"light",
+            "navigationBarBackgroundColor": "#fff",
+            "navigationBarTitleText": "ONE",
+            "navigationBarTextStyle":"black"
+        },
+        "tabBar": {
+            "color": "#888",
+            "selectedColor": "#89bdf7",
+            "backgroundColor": "#fff",
+            "borderStyle": "white",
+            "list": [{
+                "pagePath": "pages/index/index",
+                "text": "首页",
+                "iconPath": "images/home.png",
+                "selectedIconPath": "images/home_active.png"
+            }, {
+                "pagePath": "pages/reading/index",
+                "text": "阅读",
+                "iconPath": "images/reading.png",
+                "selectedIconPath": "images/reading_active.png"
+            },{
+                "pagePath": "pages/music/index",
+                "text": "音乐",
+                "iconPath": "images/music.png",
+                "selectedIconPath": "images/music_active.png"
+            },{
+                "pagePath": "pages/movie/index",
+                "text": "电影",
+                "iconPath": "images/movie.png",
+                "selectedIconPath": "images/movie_active.png"
+            }]
+        }
+    };
+
+    globalData = {
+        userInfo: null
+    };
+
+    onLaunch() {
+        console.log(this);
+    }
+
+    async getUserInfo() {
+        if (this.globalData.userInfo) {
+            return this.globalData.userInfo;
+        }
+        let x = await wx.login();
+        let res = await wx.getUserInfo();
+        this.globalData.userInfo = res.userInfo;
+        return res.userInfo;
+    }
+}
+</script>

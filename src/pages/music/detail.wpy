@@ -1,0 +1,223 @@
+<style>
+    .music {
+        height: 100%;
+        width: calc(100% + 30rpx);
+    }
+
+    .music-container {
+        margin-right: 30rpx;
+    }
+
+    .music-cover {
+        width: 100%;
+    }
+
+    .music-cover-image {
+        width: 100%;
+        height: 750rpx;
+    }
+
+    .music-control {
+        margin: 0 20rpx;
+        padding: 15rpx 20rpx 8rpx 15rpx;
+        position: relative;
+        top: -20px;
+        background-color: #fff;
+        border: 1px solid #ebebeb;
+        border-radius: 3px;
+        box-shadow: 0px 1px 1px #ebebeb;
+    }
+
+    .music-author {
+        display: inline-block;
+        width: 80%;
+        margin-bottom: 25px;
+        font-weight: 200;
+        font-size: 12px;
+    }
+
+    .music-author-avatar {
+        width: 40px;
+        height: 40px;
+        float: left;
+        margin-right: 15rpx;
+        border-radius: 50%;
+    }
+
+    .music-author-username {
+        padding: 5px;
+        color: #89bdf7;
+    }
+
+    .music-author-desc {
+        color: #888;
+    }
+
+    .music-play {
+        float: right;
+    }
+
+    .music-play-control {
+        width: 40px;
+        height: 40px;
+        margin-top: 20px;
+    }
+
+    .music-title {
+        font-size: 16px;
+    }
+
+    .music-maketime {
+        color: #888;
+        font-size: 12px;
+        text-align: right;
+    }
+
+    .music-content {
+        margin: 0 20rpx 25rpx 20rpx;
+    }
+
+    .music-content-header {
+        text-align: right;
+        border-bottom: 1px solid #eee;
+    }
+
+    .content-label {
+        float: left;
+        margin-top: 10rpx;
+        margin-left: 5rpx;
+        font-size: 12px;
+    }
+
+    .content-links {
+        display: inline-block;
+    }
+
+    .link {
+        width: 35px;
+        height: 18px;
+    }
+
+    .music-content-body {
+        margin-top: 10px;
+    }
+
+    .story-title {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .story-author {
+        color: #89bdf7;
+        font-size: 12px;
+        margin-bottom: 10px;
+    }
+
+    .story-content {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .lyric-content {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .about-content {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+</style>
+<template>
+    <view class="container">
+        <import src="templates/musicItem.wxml"/>
+        <template is="music-item" data="{{item: detail}}"/>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import {
+        MUSIC_PALY_IMG,
+        MUSIC_PAUSE_IMG
+    } from '../../utils/constants.js'
+    import api from '../../api/api.js'
+    import util from '../../utils/util.js'
+    export default class Detail extends wepy.page {
+
+        config = {
+            "navigationBarTitleText": "单曲"
+        };
+        components = {
+
+        };
+
+
+        data = {
+            detail: [],
+            playing: false
+        };
+        methods = {
+
+        };
+
+        events = {
+
+        };
+        async onLoad(options) {
+            let that = this;
+            api.getMusicDetailById({
+                query: {
+                    id: options.id
+                },
+                success: (res) => {
+                    if (res.data.res === 0) {
+                        let detail = res.data.data;
+
+                        detail.playImg = MUSIC_PALY_IMG;
+                        detail.contentType = 'story';
+                        detail.story = util.filterContent(detail.story);
+                        detail.maketime = util.formatMakettime(detail.maketime);
+                        that.detail = detail;
+                        that.setData({ detail })
+                    }
+                }
+            })
+        };
+
+        togglePlay (e) {
+            let detail = this.detail;
+            let playing = this.playing;
+
+            if (!playing) {
+                detail.playImg = MUSIC_PAUSE_IMG;
+                this.playMusic(detail)
+            } else {
+                detail.playImg = MUSIC_PALY_IMG;
+                this.pauseMusic()
+            }
+            playing = !playing;
+            this.detail = detail;
+            this.playing = playing;
+
+            this.setData({ detail, playing })
+        };
+        playMusic (music) {
+            wx.playBackgroundAudio({
+                dataUrl: music.music_id,
+                title: music.title
+            })
+        };
+        pauseMusic () {
+            wx.pauseBackgroundAudio()
+        };
+        switchContent (e) {
+            let type = e.target.dataset.type;
+            let detail = this.data.detail;
+
+            detail.contentType = type;
+            this.detail = detail;
+            this.setData({ detail })
+        }
+    }
+</script>

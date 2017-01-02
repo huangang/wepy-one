@@ -1,0 +1,128 @@
+<style>
+    .musics {
+        padding: 0 10px;
+    }
+
+    .music-item {
+        min-height: 45px;
+        margin-top: 5px;
+        border-bottom: 1px solid #ebebeb;
+    }
+
+    .music-cover {
+        float: left;
+    }
+
+    .music-cover-image {
+        width: 40px;
+        height: 40px;
+    }
+
+    .music-data {
+        width: 220px;
+        display: inline-block;
+        margin-left: 10px;
+    }
+
+    .music-title {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .music-author {
+        color: #89bdf7;
+        font-size: 12px;
+    }
+
+    .music-forward {
+        float: right;
+        margin-top: 10px;
+    }
+
+    .forward {
+        width: 20px;
+        height: 20px;
+    }
+</style>
+<template>
+    <view class="container">
+        <view class="musics">
+            <block wx:for="{{musics}}" wx:key="id">
+                <view class="music-item" data-id="{{item.id}}" bindtap="handleTap">
+                    <view class="music-cover">
+                        <image class="music-cover-image" src="{{item.cover}}" mode="aspectFill"></image>
+                    </view>
+                    <view class="music-data">
+                        <view class="music-title">
+                            <text>{{item.title}}</text>
+                        </view>
+                        <view class="music-author">
+                            <text>{{item.author.user_name}}</text>
+                        </view>
+                    </view>
+                    <view class="music-forward">
+                        <image class="forward" src="../../images/forward.png"></image>
+                    </view>
+                </view>
+            </block>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+    import api from '../../api/api.js'
+
+    export default class Monthly extends wepy.page {
+
+        config = {
+
+        };
+        components = {
+
+        };
+
+
+        data = {
+            title: '',
+            musics: []
+        };
+        methods = {
+
+        };
+
+        events = {
+
+        };
+        async onLoad(options) {
+            let that = this;
+            this.setData({
+                title: options.title
+            });
+            api.getMusicsByMonth({
+                query: {
+                    month: options.month
+                },
+                success: (res) => {
+                    if (res.data.res === 0) {
+                        let musics = res.data.data;
+                        that.musics = musics;
+                        that.setData({ musics })
+                    }
+                }
+            })
+        };
+        onReady () {
+            wx.setNavigationBarTitle({
+                title: this.data.title
+            })
+        };
+
+        handleTap (e) {
+            let id = e.currentTarget.dataset.id;
+            wx.navigateTo({
+                url: 'detail?id=' + id
+            })
+        };
+    }
+</script>
