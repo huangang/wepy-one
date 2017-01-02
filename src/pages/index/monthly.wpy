@@ -123,7 +123,7 @@
         handleTap (e) {
             let id = e.currentTarget.dataset.id;
             wx.navigateTo({
-                url: 'detail/detail?id=' + id
+                url: 'detail?id=' + id
             })
         }
     }

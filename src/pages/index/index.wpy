@@ -37,7 +37,7 @@
 
         };
 
-        getVols = function (idList) {
+        getVols  (idList) {
             let vols = this.vols;
             if (idList.length > 0) {
                 api.getVolById({
@@ -57,7 +57,8 @@
                 this.setData({ vols , '$volList$list': vols});
             }
         };
-        handleChange = function (e) {
+        handleChange  (e) {
+            let that = this;
             let current = e.detail.current;
             let volsLength = this.vols.length;
             if (current === volsLength) {
@@ -65,9 +66,9 @@
                     current: volsLength
                 });
                 wx.navigateTo({
-                    url: '../history/history?page=index',
+                    url: '../history/index?page=index',
                     success: () => {
-                        this.setData({
+                        that.setData({
                             current: volsLength - 1
                         })
                     }

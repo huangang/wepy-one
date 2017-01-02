@@ -169,6 +169,7 @@
             })
         };
         handleChange (e) {
+            let that = this;
             let current = e.detail.current;
             let length = this.data.articles.essay.length;
 
@@ -177,9 +178,9 @@
                     current: length
                 });
                 wx.navigateTo({
-                    url: '../history?page=reading',
+                    url: '../history/index?page=reading',
                     success: () => {
-                        this.setData({
+                        that.setData({
                             current: length - 1
                         })
                     }

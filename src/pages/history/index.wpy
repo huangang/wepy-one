@@ -79,6 +79,7 @@
         config = {
             "navigationBarTitleText": "往期列表"
         };
+
         components = {
 
         };

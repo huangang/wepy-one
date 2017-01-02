@@ -216,6 +216,7 @@
             }
         };
         handleChange (e) {
+            let that = this;
             let current = e.detail.current;
             let length = this.data.musics.length;
 
@@ -226,7 +227,7 @@
                 wx.navigateTo({
                     url: '../history/index?page=music',
                     success: () => {
-                        this.setData({
+                        that.setData({
                             current: length - 1
                         })
                     }
