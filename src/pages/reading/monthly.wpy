@@ -121,19 +121,19 @@
         tapEssay (e) {
             let id = e.currentTarget.dataset.id;
             wx.navigateTo({
-                url: '../essay/essay?id=' + id
+                url: 'essay?id=' + id
             })
         };
         tapSerial (e) {
             let id = e.currentTarget.dataset.id;
             wx.navigateTo({
-                url: '../serial/serial?id=' + id
+                url: 'serial?id=' + id
             })
         };
         tapQuestion (e) {
             let id = e.currentTarget.dataset.id;
             wx.navigateTo({
-                url: '../question/question?id=' + id
+                url: 'question?id=' + id
             })
         };
     }
