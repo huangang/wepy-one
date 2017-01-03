@@ -3,6 +3,7 @@
 ## install
 ```bash
 npm install wepy-cli -g
+npm install cross-env -g # 正式环境编译用
 cd wepy-one
 npm install
 wepy build --watch

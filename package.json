@@ -22,5 +22,10 @@
     "wepy-com-toast": "^1.0.0",
     "wepy-compiler-babel": "^1.3.7",
     "wepy-compiler-less": "^1.3.6"
+  },
+  "devDependencies": {
+    "wepy-compiler-sass": "^1.3.7",
+    "wepy-plugin-imagemin": "^1.3.7",
+    "wepy-plugin-uglifyjs": "^1.3.6"
   }
 }
