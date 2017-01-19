@@ -37,22 +37,17 @@
 
         };
 
-        getVols  (idList) {
+        async getVols  (idList) {
             let vols = this.vols;
             if (idList.length > 0) {
-                api.getVolById({
-                    query: {
-                        id: idList.shift()
-                    },
-                    success: (res) => {
-                        if (res.data.res === 0) {
-                            let vol = res.data.data;
-                            vol.hp_makettime = util.formatMakettime(vol.hp_makettime);
-                            vols.push(vol);
-                        }
-                        this.getVols(idList)
-                    }
-                })
+                let res = await api.getVolById({query: {id: idList.shift()}});
+                if (res.data.res === 0) {
+                    let vol = res.data.data;
+                    vol.hp_makettime = util.formatMakettime(vol.hp_makettime);
+                    vols.push(vol);
+                    this.getVols(idList)
+                }
+
             } else {
                 this.setData({ vols , '$volList$list': vols});
             }
@@ -81,16 +76,15 @@
         };
         async onLoad() {
             try {
-                await api.getVolIdList({
-                    success: (res) => {
-                        if (res.data.res === 0) {
-                            let idList = res.data.data;
-                            this.getVols(idList)
-                        }
-                    }
-                });
+                let res = await api.getVolIdList();
+                console.log(res);
+                if (res.data.res === 0) {
+                    let idList = res.data.data;
+                    console.log(idList);
+                    await this.getVols(idList)
+                }
             } catch (error) {
-                console.error(error.stack);
+                console.error(error);
             }
         }
     }

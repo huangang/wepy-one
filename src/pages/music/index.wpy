@@ -178,38 +178,25 @@
 
         };
         async onLoad() {
-            let that = this;
-            api.getMusicIdList({
-                success: (res) => {
-                    if (res.data.res === 0) {
-                        let idList = res.data.data;
-                        that.getMusics(idList)
-                    }
-                }
-            })
+            let res = await api.getMusicIdList({});
+            if (res.data.res === 0) {
+                let idList = res.data.data;
+                this.getMusics(idList)
+            }
         };
-
-        getMusics (idList) {
+        async getMusics (idList) {
             let musics = this.data.musics;
-
             if (idList.length > 0) {
-                api.getMusicDetailById({
-                    query: {
-                        id: idList.shift()
-                    },
-                    success: (res) => {
-                        if (res.data.res === 0) {
-                            let music = res.data.data;
-
-                            music.playImg = MUSIC_PALY_IMG;
-                            music.contentType = 'story';
-                            music.story = util.filterContent(music.story);
-                            music.maketime = util.formatMakettime(music.maketime);
-                            musics.push(music)
-                        }
-                        this.getMusics(idList)
-                    }
-                })
+                let res = await api.getMusicDetailById({query: {id: idList.shift()}});
+                if (res.data.res === 0) {
+                    let music = res.data.data;
+                    music.playImg = MUSIC_PALY_IMG;
+                    music.contentType = 'story';
+                    music.story = util.filterContent(music.story);
+                    music.maketime = util.formatMakettime(music.maketime);
+                    musics.push(music)
+                }
+                this.getMusics(idList)
             } else {
                 this.musics = musics;
                 this.setData({ musics })

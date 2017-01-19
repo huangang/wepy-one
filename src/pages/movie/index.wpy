@@ -64,27 +64,19 @@
         async onLoad() {
             this.getMovies();
         };
-        getMovies () {
-            let that = this;
+        async getMovies () {
             let lastId = this.data.lastId;
             if (lastId >= 0) {
-                api.getMovieListById({
-                    query: {
-                        id: lastId
-                    },
-                    success: (res) => {
-                    if (res.data.res === 0) {
-                        let moreMovies = res.data.data;
-                        let length = moreMovies.length;
-                        let lastId = length ? moreMovies[length - 1].id : -1;
-
-                        let movies = this.data.movies.concat(moreMovies);
-                        that.movies = movies;
-                        that.lastId = lastId;
-                        that.setData({ movies, lastId })
-                    }
+                let res = await api.getMovieListById({query: {id: lastId}})
+                if (res.data.res === 0) {
+                    let moreMovies = res.data.data;
+                    let length = moreMovies.length;
+                    let lastId = length ? moreMovies[length - 1].id : -1;
+                    let movies = this.data.movies.concat(moreMovies);
+                    this.movies = movies;
+                    this.lastId = lastId;
+                    this.setData({ movies, lastId })
                 }
-            })
             }
         };
         getDetail (e) {

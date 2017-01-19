@@ -165,24 +165,16 @@
 
         };
         async onLoad(options) {
-            let that = this;
-            api.getMusicDetailById({
-                query: {
-                    id: options.id
-                },
-                success: (res) => {
-                    if (res.data.res === 0) {
-                        let detail = res.data.data;
-
-                        detail.playImg = MUSIC_PALY_IMG;
-                        detail.contentType = 'story';
-                        detail.story = util.filterContent(detail.story);
-                        detail.maketime = util.formatMakettime(detail.maketime);
-                        that.detail = detail;
-                        that.setData({ detail })
-                    }
-                }
-            })
+            let res = api.getMusicDetailById({query: {id: options.id}});
+            if (res.data.res === 0) {
+                let detail = res.data.data;
+                detail.playImg = MUSIC_PALY_IMG;
+                detail.contentType = 'story';
+                detail.story = util.filterContent(detail.story);
+                detail.maketime = util.formatMakettime(detail.maketime);
+                this.detail = detail;
+                this.setData({ detail })
+            }
         };
 
         togglePlay (e) {

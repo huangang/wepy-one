@@ -1,38 +1,18 @@
 const host = 'http://v3.wufazhuce.com:8000';
-const wxRequest = (params, url) => {
-  wx.showToast({
-    title: '加载中',
-    icon: 'loading'
-  });
+const wxRequest = async (params = {}, url) => {
+    wx.showToast({
+      title: '加载中',
+      icon: 'loading'
+    });
     console.log(url);
-    wx.request_bak({
-    url: url,
-    method: params.method || 'GET',
-    data: params.data || {},
-    header: {
-      'Content-Type': 'application/json'
-    },
-    success: (res) => {
-        params.success && params.success(res)
-        console.log(res)
-        wx.hideToast()
-    },
-    fail: (res) => {
-        params.fail && params.fail(res)
-    },
-    complete: (res) => {
-        params.complete && params.complete(res)
-    }
-  });//不知道是哪里的问题,先用原来的方法,不用框架的方法
-
-    //     .then(function (res) {
-    //     if(res.statusCode === 200){
-    //         wx.hideToast();
-    //         params.success && params.success(res);
-    //     }else {
-    //         params.fail && params.fail(res)
-    //     }
-    // })
+    let res = await wx.request({
+        url: url,
+        method: params.method || 'GET',
+        data: params.data || {},
+        header: {'Content-Type': 'application/json'},
+    });
+    wx.hideToast();
+    return res;
 };
 
 // Index

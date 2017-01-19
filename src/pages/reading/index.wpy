@@ -120,26 +120,18 @@
 
         };
         async onLoad() {
-            let that = this;
-            await api.getCarousel({
-                success:  (res) => {
-                    if (res.data.res === 0) {
-                        let carousel = res.data.data;
-                        that.carousel = carousel;
-                        that.setData({ carousel : carousel });
-                    }
-                }
-            });
-
-            await api.getLastArticles({
-                success: (res) => {
-                    if (res.data.res === 0) {
-                        let articles = res.data.data;
-                        that.articles = articles;
-                        that.setData({ articles : articles });
-                    }
-                }
-            });
+            let res = await api.getCarousel({});
+            if (res.data.res === 0) {
+                let carousel = res.data.data;
+                this.carousel = carousel;
+                this.setData({ carousel : carousel });
+            }
+            let ret = await api.getLastArticles({});
+            if (ret.data.res === 0) {
+                let articles = ret.data.data;
+                this.articles = articles;
+                this.setData({ articles : articles });
+            }
         };
 
 

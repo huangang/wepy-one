@@ -88,29 +88,26 @@
 
         };
         async onLoad(options) {
-            let that = this;
             this.setData({
                 title: options.title
             });
 
             let { type, month } = options;
-            api.getArticlesByMonth({
+            let res = await api.getArticlesByMonth({
                 query: {
                     type: type,
                     month: month
                 },
-                success: (res) => {
-                    if (res.data.res === 0) {
-                        let articles = res.data.data;
-                        that.type = type;
-                        that.articles = articles;
-                        that.setData({
-                            type: type,
-                            articles: articles
-                        })
-                    }
-                }
-            })
+            });
+            if (res.data.res === 0) {
+                let articles = res.data.data;
+                this.type = type;
+                this.articles = articles;
+                this.setData({
+                    type: type,
+                    articles: articles
+                })
+            }
         };
 
         onReady () {

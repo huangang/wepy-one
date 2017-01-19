@@ -95,25 +95,21 @@
 
         };
         async onLoad(options) {
-            let that =  this;
             this.setData({
                 title: options.title
             });
-            api.getVolsByMonth({
-                query: {
-                    month: options.month
-                },
-                success: (res) => {
-                    if (res.data.res === 0) {
-                        let monthly = res.data.data;
-                        monthly.map((vol) => {
-                            vol.hp_makettime = util.formatMakettime(vol.hp_makettime)
-                        });
-                        that.monthly = monthly;
-                        that.setData({ monthly })
-                    }
-                }
-            })
+            let res = await api.getVolsByMonth({query: {month: options.month}});
+            if (res.data.res === 0) {
+                let monthly = res.data.data;
+//                monthly.map((vol) => {
+//                    vol.hp_makettime = util.formatMakettime(vol.hp_makettime)
+//                });
+                monthly.forEach(function (vol) {
+                    vol.hp_makettime = util.formatMakettime(vol.hp_makettime)
+                });
+                this.monthly = monthly;
+                this.setData({ monthly })
+            }
         };
         onReady () {
             wx.setNavigationBarTitle({

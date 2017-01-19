@@ -90,21 +90,14 @@
 
         };
         async onLoad(options) {
-            let that = this;
-            api.getQuestionById({
-                query: {
-                    id: options.id
-                },
-                success: (res) => {
-                    if (res.data.res === 0) {
-                        let question = res.data.data;
-                        question.answer_content = util.filterContent(question.answer_content);
-                        question.question_makettime = util.formatMakettime(question.question_makettime);
-                        that.question = question;
-                        that.setData({ question })
-                    }
-                }
-            })
+            let res = await api.getQuestionById({query: {id: options.id}});
+            if (res.data.res === 0) {
+                let question = res.data.data;
+                question.answer_content = util.filterContent(question.answer_content);
+                question.question_makettime = util.formatMakettime(question.question_makettime);
+                this.question = question;
+                this.setData({ question })
+            }
         };
         onReady () {
             wx.setNavigationBarTitle({

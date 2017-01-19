@@ -95,22 +95,15 @@
 
         };
         async onLoad(options) {
-            let that = this;
             this.setData({
                 title: options.title
             });
-            api.getMusicsByMonth({
-                query: {
-                    month: options.month
-                },
-                success: (res) => {
-                    if (res.data.res === 0) {
-                        let musics = res.data.data;
-                        that.musics = musics;
-                        that.setData({ musics })
-                    }
-                }
-            })
+            let res = api.getMusicsByMonth({query: {month: options.month}});
+            if (res.data.res === 0) {
+                let musics = res.data.data;
+                this.musics = musics;
+                this.setData({ musics })
+            }
         };
         onReady () {
             wx.setNavigationBarTitle({

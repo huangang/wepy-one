@@ -127,21 +127,14 @@
 
         };
         async onLoad(options) {
-            let that = this;
-            api.getEssayById({
-                query: {
-                    id: options.id
-                },
-                success: (res) => {
-                    if (res.data.res === 0) {
-                        let essay = res.data.data;
-                        essay.hp_content = util.filterContent(essay.hp_content);
-                        essay.hp_makettime = util.formatMakettime(essay.hp_makettime);
-                        that.essay = essay;
-                        that.setData({ essay })
-                    }
-                }
-            })
+            let res = await api.getEssayById({query: {id: options.id}});
+            if (res.data.res === 0) {
+                let essay = res.data.data;
+                essay.hp_content = util.filterContent(essay.hp_content);
+                essay.hp_makettime = util.formatMakettime(essay.hp_makettime);
+                this.essay = essay;
+                this.setData({ essay })
+            }
         }
 
         onReady () {
