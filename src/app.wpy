@@ -18,6 +18,13 @@ import "babel-polyfill";
 
 export default class extends wepy.app {
 
+
+    constructor () {
+        super();
+        this.use('requestfix');
+        this.use('promisify');
+    }
+
     config = {
         "pages":[
             "pages/index/index",

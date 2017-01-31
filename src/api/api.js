@@ -1,3 +1,5 @@
+import wepy from 'wepy';
+
 const host = 'http://v3.wufazhuce.com:8000';
 const wxRequest = async (params = {}, url) => {
     wx.showToast({
@@ -5,7 +7,7 @@ const wxRequest = async (params = {}, url) => {
       icon: 'loading'
     });
     console.log(url);
-    let res = await wx.request({
+    let res = await wepy.request({
         url: url,
         method: params.method || 'GET',
         data: params.data || {},
