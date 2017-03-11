@@ -5,7 +5,7 @@ const wxRequest = (params, url) => {
     icon: 'loading'
   });
     console.log(url);
-    wx.request_bak({
+    wx.request({
     url: url,
     method: params.method || 'GET',
     data: params.data || {},
