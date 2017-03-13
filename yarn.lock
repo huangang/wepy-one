@@ -569,26 +569,12 @@ babel-plugin-transform-regenerator@^6.22.0:
   dependencies:
     regenerator-transform "0.9.8"
 
-babel-plugin-transform-runtime@^6.22.0:
-  version "6.23.0"
-  resolved "http://registry.npm.taobao.org/babel-plugin-transform-runtime/download/babel-plugin-transform-runtime-6.23.0.tgz#88490d446502ea9b8e7efb0fe09ec4d99479b1ee"
-  dependencies:
-    babel-runtime "^6.22.0"
-
 babel-plugin-transform-strict-mode@^6.22.0:
   version "6.22.0"
   resolved "http://registry.npm.taobao.org/babel-plugin-transform-strict-mode/download/babel-plugin-transform-strict-mode-6.22.0.tgz#e008df01340fdc87e959da65991b7e05970c8c7c"
   dependencies:
     babel-runtime "^6.22.0"
     babel-types "^6.22.0"
-
-babel-polyfill@^6.22.0:
-  version "6.23.0"
-  resolved "http://registry.npm.taobao.org/babel-polyfill/download/babel-polyfill-6.23.0.tgz#8364ca62df8eafb830499f699177466c3b03499d"
-  dependencies:
-    babel-runtime "^6.22.0"
-    core-js "^2.4.0"
-    regenerator-runtime "^0.10.0"
 
 babel-preset-es2015@^6.18.0:
   version "6.22.0"
@@ -2460,6 +2446,10 @@ process-nextick-args@~1.0.6:
   version "1.0.7"
   resolved "http://registry.npm.taobao.org/process-nextick-args/download/process-nextick-args-1.0.7.tgz#150e20b756590ad3f91093f25a4f2ad8bff30ba3"
 
+promise-polyfill@^6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/promise-polyfill/-/promise-polyfill-6.0.2.tgz#d9c86d3dc4dc2df9016e88946defd69b49b41162"
+
 promise.pipe@^3.0.0:
   version "3.0.0"
   resolved "http://registry.npm.taobao.org/promise.pipe/download/promise.pipe-3.0.0.tgz#b8f729867f54353996e6d8e86f3bbd56882e32a6"
@@ -2565,7 +2555,7 @@ regenerate@^1.2.1:
   version "1.3.2"
   resolved "http://registry.npm.taobao.org/regenerate/download/regenerate-1.3.2.tgz#d1941c67bad437e1be76433add5b385f95b19260"
 
-regenerator-runtime@^0.10.0:
+regenerator-runtime@^0.10.0, regenerator-runtime@^0.10.3:
   version "0.10.3"
   resolved "http://registry.npm.taobao.org/regenerator-runtime/download/regenerator-runtime-0.10.3.tgz#8c4367a904b51ea62a908ac310bf99ff90a82a3e"
 
@@ -3085,6 +3075,13 @@ ware@^1.2.0:
   dependencies:
     wrap-fn "^0.1.0"
 
+wepy-async-function@^1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/wepy-async-function/-/wepy-async-function-1.4.4.tgz#60cacf56566bc1a3ebfeb0b25facd54d686def41"
+  dependencies:
+    promise-polyfill "^6.0.2"
+    regenerator-runtime "^0.10.3"
+
 wepy-com-toast@^1.0.0:
   version "1.0.0"
   resolved "http://registry.npm.taobao.org/wepy-com-toast/download/wepy-com-toast-1.0.0.tgz#63d4896e0a09aa881d9270265947cd1f3a9dedd6"
@@ -3121,9 +3118,9 @@ wepy-plugin-uglifyjs@^1.3.6:
   dependencies:
     uglify-js "^2.7.5"
 
-wepy@^1.4.4:
-  version "1.4.4"
-  resolved "http://registry.npm.taobao.org/wepy/download/wepy-1.4.4.tgz#cfc0267fb3a3db80cccd0434b6bb1eb225543cc8"
+wepy@^1.4.5:
+  version "1.4.5"
+  resolved "https://registry.yarnpkg.com/wepy/-/wepy-1.4.5.tgz#fe3db7acc234f9a54ca8d7f24f980a4f03f25962"
 
 which-module@^1.0.0:
   version "1.0.0"
