@@ -3118,9 +3118,9 @@ wepy-plugin-uglifyjs@^1.3.6:
   dependencies:
     uglify-js "^2.7.5"
 
-wepy@^1.4.5:
-  version "1.4.5"
-  resolved "https://registry.yarnpkg.com/wepy/-/wepy-1.4.5.tgz#fe3db7acc234f9a54ca8d7f24f980a4f03f25962"
+wepy@^1.4.8:
+  version "1.4.8"
+  resolved "http://registry.npm.taobao.org/wepy/download/wepy-1.4.8.tgz#9b7706c09276d62482e77c77ee762b4c93293a30"
 
 which-module@^1.0.0:
   version "1.0.0"
