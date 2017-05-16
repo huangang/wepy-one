@@ -39,7 +39,7 @@ const getMusicsByMonth = (params) => wxRequest(params, host + '/api/music/bymont
 const getMusicDetailById = (params) => wxRequest(params, host + '/api/music/detail/' + params.query.id);
 
 // Movie
-const getMovieListById = (params) => wxRequest(params, host + '/api/movie/list/' + params.query.id);
+const getMovieListById = (params) => wxRequest(params, host + '/api/channel/movie/more/' + params.query.id);
 const getMovieDetailById = (params) => wxRequest(params, host + '/api/movie/detail/' + params.query.id);
 const getMovieStoryById = (params) => wxRequest(params, host + '/api/movie/' + params.query.id + '/story/1/0');
 

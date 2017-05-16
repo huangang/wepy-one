@@ -13,23 +13,12 @@
         height: 160px;
         box-shadow: 0 2px 2px #ebebeb;
     }
-
-    .movie-score {
-        position: absolute;
-        right: 10px;
-        bottom: 10px;
-        font-size: 28px;
-        color: #f00;
-    }
 </style>
 <template>
     <view class="container">
         <scroll-view class="movies" scroll-y="true" bindscrolltolower="getMovies">
             <view wx:for="{{movies}}" class="movie" wx:key="id" data-id="{{item.id}}" bindtap="getDetail">
-                <image class="movie-cover" src="{{item.cover}}" mode="scaleToFill"></image>
-                <view class="movie-score">
-                    <text>{{item.score || '无'}}</text>
-                </view>
+                <image class="movie-cover" src="{{item.img_url}}" mode="scaleToFill"></image>
             </view>
         </scroll-view>
     </view>
