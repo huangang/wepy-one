@@ -50,7 +50,7 @@ export default class extends wepy.app {
         },
         "tabBar": {
             "color": "#888",
-            "selectedColor": "#89bdf7",
+            "selectedColor": "#000000",
             "backgroundColor": "#fff",
             "borderStyle": "white",
             "list": [{
@@ -70,7 +70,7 @@ export default class extends wepy.app {
                 "selectedIconPath": "images/music_active.png"
             },{
                 "pagePath": "pages/movie/index",
-                "text": "电影",
+                "text": "影视",
                 "iconPath": "images/movie.png",
                 "selectedIconPath": "images/movie_active.png"
             }]
