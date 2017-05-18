@@ -1,14 +1,25 @@
 <style>
-    .vol-swiper {
-        height: 100%;
+    .weather {
+        padding: 18rpx;
+    }
+    #date {
+        text-align: center;
+        font-weight:bold;
+    }
+    #info {
+        text-align: center;
+        font-size: 13px;
     }
 </style>
 <template>
     <view class="container">
-        <swiper class="vol-swiper" current="{{current}}" bindchange="handleChange">
+        <view class="weather">
+            <view id="date">{{weather.date}}</view>
+            <view id="info">{{weather.climate}}, {{weather.city_name}}</view>
+        </view>
+        <view current="{{current}}" bindchange="handleChange">
             <volList :list="vols"></volList>
-            <swiper-item></swiper-item>
-        </swiper>
+        </view>
     </view>
 </template>
 
@@ -30,26 +41,44 @@
 
         data = {
             vols: [],
-            current: 0
+            current: 0,
+            idList: [],
+            weather: {}
         };
 
         methods = {
 
         };
 
-        async getVols  (idList) {
-            let vols = this.vols;
-            if (idList.length > 0) {
-                let res = await api.getVolById({query: {id: idList.shift()}});
-                if (res.data.res === 0) {
-                    let vol = res.data.data;
-                    vol.hp_makettime = util.formatMakettime(vol.hp_makettime);
-                    vols.push(vol);
-                    this.getVols(idList)
-                }
-
-            } else {
+        async getVols  (id, city) {
+            let res = await api.getVolById({query: {id, city}});
+            if (res.data.res === 0) {
+                let vols = res.data.data.content_list;
+                this.weather = res.data.data.weather;
+                this.vols = vols;
+                console.log(vols);
+                vols.forEach((vol) => {
+                  vol.tag = '';
+                  switch (vol.category){
+                    case '1':
+                      vol.tag = vol.tag_list[0].title;
+                      break;
+                    case '2':
+                      vol.tag = '连载';
+                      break;
+                    case '3':
+                      vol.tag = '问答';
+                      break;
+                    case '4':
+                      vol.tag = '音乐';
+                      break;
+                    case '5':
+                      vol.tag = '影视';
+                      break;
+                  }
+                });
                 this.setData({ vols , '$volList$list': vols});
+                this.$apply();
             }
         };
         handleChange  (e) {
@@ -76,12 +105,15 @@
         };
         async onLoad() {
             try {
+                let cityRes = await api.getCity();
+                let city = '杭州'; // 默认杭州
+                cityRes.data && cityRes.data.city && (city = cityRes.data.city);
                 let res = await api.getVolIdList();
-                console.log(res);
                 if (res.data.res === 0) {
                     let idList = res.data.data;
                     console.log(idList);
-                    await this.getVols(idList)
+                    this.setData({ idList });
+                    await this.getVols(idList[0], city)
                 }
             } catch (error) {
                 console.error(error);

@@ -31,12 +31,14 @@
         width: 100%;
         min-height: 200rpx;
         display: inline-block;
+        padding: 10rpx;
+        color: #888;
     }
 
     .vol-makettime {
         font-size: 12px;
         color:  #888;
-        text-align: right;
+        text-align: center;
     }
     .vol-swiper-item {
         padding: 25 rpx;
@@ -44,23 +46,37 @@
     }
 </style>
 <template>
-    <block wx:for="{{list}}" wx:for-index="idx" wx:for-item="item" wx:key="{{hpcontent_id}}">
-        <swiper-item class="vol-swiper-item">
-            <!--<volItem :item="item"></volItem>-->
-          <view class="vol-card">
-            <image class="vol-picture" src="{{item.hp_img_url}}" mode="aspectFill"></image>
-            <view class="vol-meta">
-                <text class="vol-number">{{item.hp_title}}</text>
-                <text class="vol-author">{{item.hp_author}}</text>
-            </view>
-            <view class="vol-content">
-                <text class="vol-content-text">{{item.hp_content}}</text>
-            </view>
-            <view class="vol-makettime">
-                <text class="vol-makettime-text">{{item.hp_makettime}}</text>
+    <block wx:for="{{list}}" wx:for-index="idx" wx:for-item="item" wx:key="{{content_id}}">
+        <!--第一个-->
+        <view class="vol-swiper-item" wx:if="{{idx == 0}}">
+            <view class="vol-card">
+                <image class="vol-picture" src="{{item.img_url}}" mode="aspectFill"></image>
+                <view class="vol-meta">
+                    <view style="text-align:center;">{{item.title}}|{{item.pic_info}}</view>
+                </view>
+                <view class="vol-content">
+                    <text class="vol-content-text">{{item.forward}}</text>
+                </view>
+                <view class="vol-makettime">
+                    {{item.words_info}}
+                </view>
             </view>
         </view>
-        </swiper-item>
+
+        <view class="vol-swiper-item" wx:if="{{idx > 0}}">
+          <view class="vol-card">
+              <view style="text-align: center;font-size: 12px;color:  #888;">- {{item.tag}} -</view>
+              <view style="font-size: 18px; padding-top: 5px;padding-bottom: 5px;">{{item.title}}</view>
+              <view style="color:  #888;font-size: 13px;padding-top: 5px;padding-bottom: 5px;">文／{{item.author.user_name}}</view>
+              <image class="vol-picture" src="{{item.img_url}}" mode="aspectFill"></image>
+            <view class="vol-meta">
+                <text class="vol-author">{{item.pic_info}}</text>
+            </view>
+            <view class="vol-content">
+                <text class="vol-content-text">{{item.forward}}</text>
+            </view>
+          </view>
+        </view>
     </block>
 </template>
 

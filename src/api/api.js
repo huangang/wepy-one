@@ -1,6 +1,6 @@
 import wepy from 'wepy';
 
-const host = 'http://v3.wufazhuce.com:8000';
+const host = 'http://v3.wufazhuce.com:8000/api/';
 const wxRequest = async (params = {}, url) => {
     wx.showToast({
       title: '加载中',
@@ -17,33 +17,37 @@ const wxRequest = async (params = {}, url) => {
     return res;
 };
 
+
+const getCity = (params) => wxRequest(params, 'http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=json');
+
 // Index
-const getVolById = (params) => wxRequest(params, host + '/api/hp/detail/' + params.query.id);
-const getVolIdList = (params) => wxRequest(params, host + '/api/hp/idlist/0');
-const getVolsByMonth = (params) => wxRequest(params, host + '/api/hp/bymonth/' + params.query.month);
-const getVolDetailById = (params) => wxRequest(params, host + '/api/hp/detail/' + params.query.id);
+const getVolIdList = (params) => wxRequest(params, host + 'onelist/idlist');
+const getVolById = (params) => wxRequest(params, host + 'onelist/' + params.query.id + '/' + params.query.city);
+const getVolsByMonth = (params) => wxRequest(params, host + 'hp/bymonth/' + params.query.month);
+const getVolDetailById = (params) => wxRequest(params, host + 'hp/detail/' + params.query.id);
 
 // Reading
-const getCarousel = (params) => wxRequest(params, host + '/api/reading/carousel');
-const getLastArticles = (params) => wxRequest(params, host + '/api/reading/index');
-const getEssayById = (params) => wxRequest(params, host + '/api/essay/' + params.query.id);
-const getSerialById = (params) => wxRequest(params, host + '/api/serialcontent/' + params.query.id);
-const getQuestionById = (params) => wxRequest(params, host + '/api/question/' + params.query.id);
+const getCarousel = (params) => wxRequest(params, host + 'reading/carousel');
+const getLastArticles = (params) => wxRequest(params, host + 'reading/index');
+const getEssayById = (params) => wxRequest(params, host + 'essay/' + params.query.id);
+const getSerialById = (params) => wxRequest(params, host + 'serialcontent/' + params.query.id);
+const getQuestionById = (params) => wxRequest(params, host + '/question/' + params.query.id);
 const getArticlesByMonth = (params) => {
-  wxRequest(params, host + '/api/' + params.query.type + '/bymonth/' + params.query.month)
+  wxRequest(params, host + params.query.type + '/bymonth/' + params.query.month)
 };
 
 // Music
-const getMusicIdList = (params) => wxRequest(params, host + '/api/music/idlist/0');
-const getMusicsByMonth = (params) => wxRequest(params, host + '/api/music/bymonth/' + params.query.month);
-const getMusicDetailById = (params) => wxRequest(params, host + '/api/music/detail/' + params.query.id);
+const getMusicIdList = (params) => wxRequest(params, host + 'music/idlist/0');
+const getMusicsByMonth = (params) => wxRequest(params, host + 'music/bymonth/' + params.query.month);
+const getMusicDetailById = (params) => wxRequest(params, host + 'music/detail/' + params.query.id);
 
 // Movie
-const getMovieListById = (params) => wxRequest(params, host + '/api/channel/movie/more/' + params.query.id);
-const getMovieDetailById = (params) => wxRequest(params, host + '/api/movie/detail/' + params.query.id);
-const getMovieStoryById = (params) => wxRequest(params, host + '/api/movie/' + params.query.id + '/story/1/0');
+const getMovieListById = (params) => wxRequest(params, host + 'channel/movie/more/' + params.query.id);
+const getMovieDetailById = (params) => wxRequest(params, host + 'movie/detail/' + params.query.id);
+const getMovieStoryById = (params) => wxRequest(params, host + 'movie/' + params.query.id + '/story/1/0');
 
 module.exports = {
+  getCity,
   getVolById,
   getVolIdList,
   getVolsByMonth,
