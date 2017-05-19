@@ -43,7 +43,6 @@
 
     .vol-content-text {
         width: 100%;
-        min-height: 200rpx;
         display: inline-block;
         padding: 10rpx;
         color: #888;
@@ -94,7 +93,10 @@
                                         <text class="vol-author">{{volItem.pic_info}}</text>
                                     </view>
                                     <view class="vol-content">
-                                        <text class="vol-content-text">{{volItem.forward}}</text>
+                                        <view class="vol-content-text">
+                                            {{volItem.forward}}
+                                            <view wx:if="{{volItem.movieFrom}}" style="float: right;margin-bottom: 10px;">{{volItem.movieFrom}}</view>
+                                        </view>
                                     </view>
                                 </view>
                             </view>
@@ -142,7 +144,10 @@
                   vol.tag = '';
                   switch (vol.category){
                     case '1':
-                      vol.tag = vol.tag_list[0].title;
+                      try {
+                        vol.tag = vol.tag_list[0].title;
+                      }catch (e){
+                      }
                       break;
                     case '2':
                       vol.tag = '连载';
@@ -155,6 +160,7 @@
                       break;
                     case '5':
                       vol.tag = '影视';
+                      vol.movieFrom = "———《" + (vol.subtitle).substring(3, (vol.subtitle).length - 1) +"》";
                       break;
                   }
                 });
