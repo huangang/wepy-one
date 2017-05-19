@@ -100,7 +100,7 @@
         };
 
         onLoad () {
-            console.log(this.list)
+            console.log('list', this.list)
         };
 
         load (list) {

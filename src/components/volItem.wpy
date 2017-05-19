@@ -31,56 +31,48 @@
         width: 100%;
         min-height: 200rpx;
         display: inline-block;
+        padding: 10rpx;
+        color: #888;
     }
 
     .vol-makettime {
         font-size: 12px;
         color:  #888;
-        text-align: right;
+        text-align: center;
+    }
+    .vol-swiper-item {
+        padding: 25 rpx;
+        box-sizing: border-box;
     }
 </style>
 <template>
-
-      <view class="vol-card">
-        <image class="vol-picture" src="{{item.hp_img_url}}" mode="aspectFill"></image>
-        <view class="vol-meta">
-            <text class="vol-number">{{item.hp_title}}</text>
-            <text class="vol-author">{{item.hp_author}}</text>
-        </view>
-        <view class="vol-content">
-            <text class="vol-content-text">{{item.hp_content}}</text>
-        </view>
-        <view class="vol-makettime">
-            <text class="vol-makettime-text">{{item.hp_makettime}}</text>
-        </view>
-    </view>
+        <!--第一个-->
 
 </template>
 
 <script>
-    import wepy from 'wepy';
+  import wepy from 'wepy';
+  export default class VolItem extends wepy.component {
+    props = {
+      item:{}
+    };
 
-    export default class VolItem extends wepy.component {
-        props = {
-            item: {}
-        };
+    data = {
 
-        data = {
+    };
 
-        };
+    methods = {
+    };
 
-        methods = {
-        };
+    onLoad () {
+      console.log('item', this.item)
+    };
 
-        onLoad () {
-            console.log(this.item)
-        };
-
-        load (item) {
-            this.item = item;
-            this.$apply();
-        }
-
-
+    load (item) {
+      this.item = item;
+      this.$apply();
     }
+
+
+  }
 </script>

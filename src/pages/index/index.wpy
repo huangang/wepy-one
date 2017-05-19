@@ -10,16 +10,100 @@
         text-align: center;
         font-size: 13px;
     }
+    .vol-swiper {
+        height: 100%;
+    }
+    .vol-card {
+        padding: 20rpx;
+        border: 1px solid #ebebeb;
+        border-radius: 3px;
+        box-shadow: 1px 1px 1px #ebebeb;
+    }
+
+    .vol-picture {
+        width: 100%;
+    }
+
+    .vol-meta {
+        padding: 10rpx 5rpx;
+        font-size: 12px;
+        color: #888;
+    }
+
+    .vol-author {
+        float: right;
+    }
+
+    .vol-content {
+        margin-top: 30rpx;
+        padding: 0 5rpx;
+        font-size: 14px;
+        line-height: 1.4;
+    }
+
+    .vol-content-text {
+        width: 100%;
+        min-height: 200rpx;
+        display: inline-block;
+        padding: 10rpx;
+        color: #888;
+    }
+
+    .vol-makettime {
+        font-size: 12px;
+        color:  #888;
+        text-align: center;
+    }
+    .vol-swiper-item {
+        padding: 25 rpx;
+        box-sizing: border-box;
+    }
 </style>
 <template>
     <view class="container">
-        <view class="weather">
-            <view id="date">{{weather.date}}</view>
-            <view id="info">{{weather.climate}}, {{weather.city_name}}</view>
-        </view>
-        <view current="{{current}}" bindchange="handleChange">
-            <volList :list="vols"></volList>
-        </view>
+        <swiper class="vol-swiper">
+            <block wx:for="{{list}}" wx:for-item="item" wx:for-index="index" wx:key="{{index}}">
+                <swiper-item style="overflow:auto;overflow-x: hidden">
+                    <view class="weather">
+                        <view id="date">{{item.weather.date}}</view>
+                        <view id="info">{{item.weather.climate}}, {{item.weather.city_name}}</view>
+                    </view>
+                    <view bindchange="handleChange">
+                        <block wx:for="{{item.vols}}" wx:for-index="idx" wx:for-item="volItem" wx:key="{{content_id}}">
+                            <view class="vol-swiper-item" wx:if="{{idx == 0}}">
+                                <view class="vol-card">
+                                    <image class="vol-picture" src="{{volItem.img_url}}" mode="aspectFill"></image>
+                                    <view class="vol-meta">
+                                        <view style="text-align:center;">{{volItem.title}}|{{volItem.pic_info}}</view>
+                                    </view>
+                                    <view class="vol-content">
+                                        <text class="vol-content-text">{{volItem.forward}}</text>
+                                    </view>
+                                    <view class="vol-makettime">
+                                        {{volItem.words_info}}
+                                    </view>
+                                </view>
+                            </view>
+                            <view class="vol-swiper-item" wx:if="{{idx > 0}}">
+                                <view class="vol-card">
+                                    <view style="text-align: center;font-size: 12px;color:  #888;">- {{volItem.tag}} -</view>
+                                    <view style="font-size: 18px; padding-top: 5px;padding-bottom: 5px;">{{volItem.title}}</view>
+                                    <view style="color:  #888;font-size: 13px;padding-top: 5px;padding-bottom: 5px;">文／{{volItem.author.user_name}}</view>
+                                    <image class="vol-picture" src="{{volItem.img_url}}" mode="aspectFill"></image>
+                                    <view class="vol-meta">
+                                        <text class="vol-author">{{volItem.pic_info}}</text>
+                                    </view>
+                                    <view class="vol-content">
+                                        <text class="vol-content-text">{{volItem.forward}}</text>
+                                    </view>
+                                </view>
+                            </view>
+
+                        </block>
+                    </view>
+                </swiper-item>
+            </block>
+        </swiper>
     </view>
 </template>
 
@@ -27,7 +111,6 @@
     import wepy from 'wepy';
     import api from '../../api/api.js'
     import util from '../../utils/util.js'
-    import VolList from '../../components/volList'
 
     export default class Index extends wepy.page {
         config = {
@@ -35,27 +118,25 @@
         };
 
         components = {
-            'volList': VolList
         };
 
 
         data = {
-            vols: [],
-            current: 0,
-            idList: [],
-            weather: {}
+            list: [],
+            idList: []
         };
 
         methods = {
 
         };
 
-        async getVols  (id, city) {
-            let res = await api.getVolById({query: {id, city}});
-            if (res.data.res === 0) {
+        async getVols  (idList, city) {
+            for (let i = 0; i < idList.length; i++){
+              let id = idList[i];
+              let res = await api.getVolById({query: {id, city}});
+              if (res.data.res === 0) {
                 let vols = res.data.data.content_list;
-                this.weather = res.data.data.weather;
-                this.vols = vols;
+                let weather = res.data.data.weather;
                 console.log(vols);
                 vols.forEach((vol) => {
                   vol.tag = '';
@@ -77,8 +158,11 @@
                       break;
                   }
                 });
-                this.setData({ vols , '$volList$list': vols});
-                this.$apply();
+                this.list.push({
+                  vols, weather
+                });
+              }
+              this.$apply();
             }
         };
         handleChange  (e) {
@@ -110,11 +194,11 @@
                 cityRes.data && cityRes.data.city && (city = cityRes.data.city);
                 let res = await api.getVolIdList();
                 if (res.data.res === 0) {
-                    let idList = res.data.data;
-                    console.log(idList);
-                    this.setData({ idList });
-                    await this.getVols(idList[0], city)
+                    this.idList = res.data.data;
+                    console.log(this.idList);
+                    await this.getVols(this.idList, city);
                 }
+                this.$apply();
             } catch (error) {
                 console.error(error);
             }
