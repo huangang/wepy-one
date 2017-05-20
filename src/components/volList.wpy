@@ -1,4 +1,15 @@
 <style>
+    .weather {
+        padding: 18rpx;
+    }
+    #date {
+        text-align: center;
+        font-weight:bold;
+    }
+    #info {
+        text-align: center;
+        font-size: 13px;
+    }
     .vol-card {
         padding: 20rpx;
         border: 1px solid #ebebeb;
@@ -29,7 +40,6 @@
 
     .vol-content-text {
         width: 100%;
-        min-height: 200rpx;
         display: inline-block;
         padding: 10rpx;
         color: #888;
@@ -46,67 +56,69 @@
     }
 </style>
 <template>
-    <block wx:for="{{list}}" wx:for-index="idx" wx:for-item="item" wx:key="{{content_id}}">
-        <!--第一个-->
-        <view class="vol-swiper-item" wx:if="{{idx == 0}}">
-            <view class="vol-card">
-                <image class="vol-picture" src="{{item.img_url}}" mode="aspectFill"></image>
-                <view class="vol-meta">
-                    <view style="text-align:center;">{{item.title}}|{{item.pic_info}}</view>
-                </view>
-                <view class="vol-content">
-                    <text class="vol-content-text">{{item.forward}}</text>
-                </view>
-                <view class="vol-makettime">
-                    {{item.words_info}}
-                </view>
-            </view>
+    <swiper-item style="overflow:auto;overflow-x: hidden">
+        <view class="weather">
+            <view id="date">{{item.weather.date}}</view>
+            <view id="info">{{item.weather.climate}}, {{item.weather.city_name}}</view>
         </view>
+        <view bindchange="handleChange">
+            <block wx:for="{{item.vols}}" wx:for-index="idx" wx:for-item="volItem" wx:key="{{content_id}}">
+                <view class="vol-swiper-item" wx:if="{{idx == 0}}">
+                    <view class="vol-card">
+                        <image class="vol-picture" src="{{volItem.img_url}}" mode="aspectFill"></image>
+                        <view class="vol-meta">
+                            <view style="text-align:center;">{{volItem.title}}|{{volItem.pic_info}}</view>
+                        </view>
+                        <view class="vol-content">
+                            <text class="vol-content-text">{{volItem.forward}}</text>
+                        </view>
+                        <view class="vol-makettime">
+                            {{volItem.words_info}}
+                        </view>
+                    </view>
+                </view>
+                <view class="vol-swiper-item" wx:if="{{idx > 0}}">
+                    <view class="vol-card">
+                        <view style="text-align: center;font-size: 12px;color:  #888;">- {{volItem.tag}} -</view>
+                        <view style="font-size: 18px; padding-top: 5px;padding-bottom: 5px;">{{volItem.title}}</view>
+                        <view style="color:  #888;font-size: 13px;padding-top: 5px;padding-bottom: 5px;">文／{{volItem.author.user_name}}</view>
+                        <image class="vol-picture" src="{{volItem.img_url}}" mode="aspectFill"></image>
+                        <view class="vol-meta">
+                            <text class="vol-author">{{volItem.pic_info}}</text>
+                        </view>
+                        <view class="vol-content">
+                            <view class="vol-content-text">
+                                {{volItem.forward}}
+                                <view wx:if="{{volItem.movieFrom}}" style="float: right;margin-bottom: 10px;">{{volItem.movieFrom}}</view>
+                            </view>
+                        </view>
+                    </view>
+                </view>
 
-        <view class="vol-swiper-item" wx:if="{{idx > 0}}">
-          <view class="vol-card">
-              <view style="text-align: center;font-size: 12px;color:  #888;">- {{item.tag}} -</view>
-              <view style="font-size: 18px; padding-top: 5px;padding-bottom: 5px;">{{item.title}}</view>
-              <view style="color:  #888;font-size: 13px;padding-top: 5px;padding-bottom: 5px;">文／{{item.author.user_name}}</view>
-              <image class="vol-picture" src="{{item.img_url}}" mode="aspectFill"></image>
-            <view class="vol-meta">
-                <text class="vol-author">{{item.pic_info}}</text>
-            </view>
-            <view class="vol-content">
-                <text class="vol-content-text">{{item.forward}}</text>
-            </view>
-          </view>
+            </block>
         </view>
-    </block>
+    </swiper-item>
 </template>
 
 <script>
     import wepy from 'wepy';
-//    import VolItem from 'volItem';
     export default class VolList extends wepy.component {
         props = {
-            list:{}
+            item: {
+                weather: {},
+                vols: []
+            }
         };
 
         components = {
-//            'volItem': VolItem
         };
 
         data = {
-
+            list: []
         };
 
         methods = {
         };
-
-        onLoad () {
-            console.log('list', this.list)
-        };
-
-        load (list) {
-            this.list = list;
-            this.$apply();
-        }
 
 
     }
