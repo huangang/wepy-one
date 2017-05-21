@@ -1,11 +1,13 @@
 import wepy from 'wepy';
 
 const host = 'http://v3.wufazhuce.com:8000/api/';
-const wxRequest = async (params = {}, url) => {
-    wx.showToast({
-      title: '加载中',
-      icon: 'loading'
-    });
+const wxRequest = async (params = {}, url, showToast = true) => {
+    if(showToast){
+        wx.showToast({
+            title: '加载中',
+            icon: 'loading'
+        });
+    }
     console.log(url);
     let res = await wepy.request({
         url: url,
@@ -22,7 +24,7 @@ const getCity = (params) => wxRequest(params, 'http://int.dpool.sina.com.cn/iplo
 
 // Index
 const getVolIdList = (params) => wxRequest(params, host + 'onelist/idlist'); // *
-const getVolById = (params) => wxRequest(params, host + 'onelist/' + params.query.id + '/' + params.query.city); // *
+const getVolById = (params, showToast) => wxRequest(params, host + 'onelist/' + params.query.id + '/' + params.query.city, showToast); // *
 
 const getVolsByMonth = (params) => wxRequest(params, host + 'hp/bymonth/' + params.query.month);
 const getVolDetailById = (params) => wxRequest(params, host + 'hp/detail/' + params.query.id);

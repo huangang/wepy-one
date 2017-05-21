@@ -40,7 +40,11 @@
         async getVols  (idList, city) {
             for (let i = 0; i < idList.length; i++){
               let id = idList[i];
-              let res = await api.getVolById({query: {id, city}});
+              let showToast = true;
+              if(i > 0){
+                  showToast = false;
+              }
+              let res = await api.getVolById({query: {id, city}}, showToast);
               if (res.data.res === 0) {
                 let vols = res.data.data.content_list;
                 let weather = res.data.data.weather;
