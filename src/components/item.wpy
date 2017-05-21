@@ -1,0 +1,73 @@
+<style>
+    .vol-card {
+        padding: 20rpx;
+        border: 1px solid #ebebeb;
+        border-radius: 3px;
+        box-shadow: 1px 1px 1px #ebebeb;
+    }
+
+    .vol-tag  {
+        text-align: center;
+        font-size: 12px;
+        color:  #888;
+    }
+
+    .vol-title {
+        font-size: 18px; padding-top: 5px;padding-bottom: 5px;
+    }
+
+    .vol-picture {
+        width: 100%;
+    }
+
+    .vol-author {
+        color:  #888;font-size: 13px;padding-top: 5px;padding-bottom: 5px;
+    }
+
+    .vol-content {
+        margin-top: 30rpx;
+        padding: 0 5rpx;
+        font-size: 14px;
+        line-height: 1.4;
+    }
+
+    .vol-content-text {
+        width: 100%;
+        display: inline-block;
+        padding: 10rpx;
+        color: #888;
+    }
+
+
+    .vol-movieFrom {
+        float: right;margin-bottom: 10px;
+    }
+</style>
+<template>
+    <view class="vol-card">
+        <view class="vol-tag">- {{item.tag}} -</view>
+        <view class="vol-title">{{item.title}}</view>
+        <view class="vol-author">文／{{item.author.user_name}}</view>
+        <image class="vol-picture" src="{{item.img_url}}" mode="aspectFill"></image>
+        <view class="vol-content">
+            <view class="vol-content-text">
+                {{item.forward}}
+                <view wx:if="{{item.movieFrom}}" class="vol-movieFrom">{{item.movieFrom}}</view>
+            </view>
+        </view>
+    </view>
+</template>
+
+<script>
+    import wepy from 'wepy';
+
+    export default class Item extends wepy.component {
+        props = {
+            item: {}
+        };
+
+        async onLoad() {
+            console.log('load');
+        }
+    }
+</script>

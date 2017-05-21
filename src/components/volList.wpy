@@ -61,7 +61,7 @@
             <view id="date">{{item.weather.date}}</view>
             <view id="info">{{item.weather.climate}}, {{item.weather.city_name}}</view>
         </view>
-        <view bindchange="handleChange">
+        <view>
             <block wx:for="{{item.vols}}" wx:for-index="idx" wx:for-item="volItem" wx:key="{{content_id}}">
                 <view class="vol-swiper-item" wx:if="{{idx == 0}}">
                     <view class="vol-card">

@@ -76,28 +76,12 @@
               this.$apply();
             }
         };
-        handleChange  (e) {
-            let that = this;
-            let current = e.detail.current;
-            let volsLength = this.vols.length;
-            if (current === volsLength) {
-                this.setData({
-                    current: volsLength
-                });
-                wx.navigateTo({
-                    url: '../history/index?page=index',
-                    success: () => {
-                        that.setData({
-                            current: volsLength - 1
-                        })
-                    }
-                })
-            }
-        };
+
 
         events = {
 
         };
+
         async onLoad() {
             try {
                 let cityRes = await api.getCity();

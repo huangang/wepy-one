@@ -1,268 +1,40 @@
 <style>
-    .musics-swiper {
-        width: 100%;
+    #scroll{
         height: 100%;
-    }
-
-    .music {
-        height: 100%;
-        width: calc(100% + 30rpx);
-    }
-
-    .music-container {
-        margin-right: 30rpx;
-    }
-
-    .music-cover {
-        width: 100%;
-    }
-
-    .music-cover-image {
-        width: 100%;
-        height: 750rpx;
-    }
-
-    .music-control {
-        margin: 0 20rpx;
-        padding: 15rpx 20rpx 8rpx 15rpx;
-        position: relative;
-        top: -20px;
-        background-color: #fff;
-        border: 1px solid #ebebeb;
-        border-radius: 3px;
-        box-shadow: 0px 1px 1px #ebebeb;
-    }
-
-    .music-author {
-        display: inline-block;
-        width: 80%;
-        margin-bottom: 25px;
-        font-weight: 200;
-        font-size: 12px;
-    }
-
-    .music-author-avatar {
-        width: 40px;
-        height: 40px;
-        float: left;
-        margin-right: 15rpx;
-        border-radius: 50%;
-    }
-
-    .music-author-username {
-        padding: 5px;
-        color: #89bdf7;
-    }
-
-    .music-author-desc {
-        color: #888;
-    }
-
-    .music-play {
-        float: right;
-    }
-
-    .music-play-control {
-        width: 40px;
-        height: 40px;
-        margin-top: 20px;
-    }
-
-    .music-title {
-        font-size: 16px;
-    }
-
-    .music-maketime {
-        color: #888;
-        font-size: 12px;
-        text-align: right;
-    }
-
-    .music-content {
-        margin: 0 20rpx 25rpx 20rpx;
-    }
-
-    .music-content-header {
-        text-align: right;
-        border-bottom: 1px solid #eee;
-    }
-
-    .content-label {
-        float: left;
-        margin-top: 10rpx;
-        margin-left: 5rpx;
-        font-size: 12px;
-    }
-
-    .content-links {
-        display: inline-block;
-    }
-
-    .link {
-        width: 35px;
-        height: 18px;
-    }
-
-    .music-content-body {
-        margin-top: 10px;
-    }
-
-    .story-title {
-        font-size: 16px;
-        margin-bottom: 10px;
-    }
-
-    .story-author {
-        color: #89bdf7;
-        font-size: 12px;
-        margin-bottom: 10px;
-    }
-
-    .story-content {
-        font-size: 14px;
-        line-height: 1.5;
-    }
-
-    .lyric-content {
-        font-size: 14px;
-        line-height: 1.5;
-    }
-
-    .about-content {
-        font-size: 14px;
-        line-height: 1.5;
     }
 </style>
 <template>
     <view class="container">
-        <swiper class="musics-swiper" current="{{current}}" bindchange="handleChange">
-            <block wx:for="{{musics}}" wx:key="id" wx:for-index="idx">
-                <swiper-item class="musics-swiper-item">
-                    <import src="templates/musicItem.wxml"/>
-                    <template is="music-item" data="{{item: item}}"/>
-                </swiper-item>
-            </block>
-            <swiper-item></swiper-item>
-        </swiper>
+        <scroll-view bindscrolltolower="loadMore" scroll-y="true" id="scroll">
+            <repeat for="{{list}}" key="index" index="index" item="item">
+                <item :item.async="item"></item>
+            </repeat>
+        </scroll-view>
     </view>
-</template>
 
+</template>
 <script>
     import wepy from 'wepy';
-    import {
-        MUSIC_PALY_IMG,
-        MUSIC_PAUSE_IMG
-    } from '../../utils/constants.js'
     import api from '../../api/api.js'
-    import util from '../../utils/util.js'
+    import item from '../../components/item'
+    import ItemMixin from '../../mixins/item';
     export default class Music extends wepy.page {
 
-        config = {
-            "navigationBarTitleText": "音乐"
-        };
         components = {
-
+            item
         };
-
 
         data = {
-            musics: [],
-            current: 0,
-            playId: -1
-        };
-        methods = {
-
+            id: 0,
+            list: [],
+            requestList: () => {}
         };
 
-        events = {
+        mixins = [ItemMixin];
 
-        };
         async onLoad() {
-            let res = await api.getMusicIdList({});
-            if (res.data.res === 0) {
-                let idList = res.data.data;
-                this.getMusics(idList)
-            }
-        };
-        async getMusics (idList) {
-            let musics = this.data.musics;
-            if (idList.length > 0) {
-                let res = await api.getMusicDetailById({query: {id: idList.shift()}});
-                if (res.data.res === 0) {
-                    let music = res.data.data;
-                    music.playImg = MUSIC_PALY_IMG;
-                    music.contentType = 'story';
-                    music.story = util.filterContent(music.story);
-                    music.maketime = util.formatMakettime(music.maketime);
-                    musics.push(music)
-                }
-                this.getMusics(idList)
-            } else {
-                this.musics = musics;
-                this.setData({ musics })
-            }
-        };
-        handleChange (e) {
-            let that = this;
-            let current = e.detail.current;
-            let length = this.data.musics.length;
-
-            if (current === length) {
-                this.setData({
-                    current: length
-                });
-                wx.navigateTo({
-                    url: '../history/index?page=music',
-                    success: () => {
-                        that.setData({
-                            current: length - 1
-                        })
-                    }
-                })
-            }
-        };
-        togglePlay (e) {
-            let musics = this.data.musics;
-            let playId = this.data.playId;
-            let musicId = e.target.dataset.id;
-            let music = musics.find((music) => music.id === musicId);
-
-            musics = musics.map((music) => {
-                music.playImg = MUSIC_PALY_IMG;
-                return music
-            });
-
-            if (playId !== musicId) {
-                playId = musicId;
-                music.playImg = MUSIC_PAUSE_IMG;
-                this.playMusic(music)
-            } else {
-                playId = -1;
-                music.playImg = MUSIC_PALY_IMG;
-                this.pauseMusic()
-            }
-            this.musics = musics;
-            this.playId = playId;
-            this.setData({ musics, playId })
-        };
-        playMusic (music) {
-            wx.playBackgroundAudio({
-                dataUrl: music.music_id,
-                title: music.title
-            })
-        };
-        pauseMusic () {
-            wx.pauseBackgroundAudio()
-        };
-        switchContent (e) {
-            let id = e.currentTarget.dataset.id;
-            let type = e.target.dataset.type;
-
-            let musics = this.data.musics;
-            let music = musics.find((music) => music.id === id);
-            music.contentType = type;
-            this.musics = musics;
-            this.setData({ musics })
+            this.requestList = api.getMusicList;
         }
     }
+
 </script>
