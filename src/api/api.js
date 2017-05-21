@@ -1,5 +1,5 @@
 import wepy from 'wepy';
-
+const version = '4.2.2';
 const host = 'http://v3.wufazhuce.com:8000/api/';
 const wxRequest = async (params = {}, url, showToast = true) => {
     if(showToast){
@@ -8,9 +8,14 @@ const wxRequest = async (params = {}, url, showToast = true) => {
             icon: 'loading'
         });
     }
+    if(url.indexOf('?') > -1){
+        url += "&version=" + version;
+    }else {
+        url += "?version=" + version;
+    }
     console.log(url);
     let res = await wepy.request({
-        url: url,
+        url,
         method: params.method || 'GET',
         data: params.data || {},
         header: {'Content-Type': 'application/json'},
