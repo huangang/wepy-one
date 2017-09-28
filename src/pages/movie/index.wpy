@@ -21,13 +21,29 @@
         font-size: 28px;
         color: #f00;
     }
+    .movie-title {
+        width: 100%;
+        height: 160px;
+        box-shadow: 0 2px 2px #ebebeb;
+    }
+    .movie-title-text{
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        padding-top: 20%;
+    }
+
 </style>
 <template>
     <view class="container">
         <scroll-view class="movies" scroll-y="true" bindscrolltolower="getMovies">
             <view wx:for="{{movies}}" class="movie" wx:key="id" data-id="{{item.id}}" bindtap="getDetail">
-                <image class="movie-cover" src="{{item.cover}}" mode="scaleToFill"></image>
-                <view class="movie-score">
+                <view wx:if="{{!item.cover}}" class="movie-title">
+                    <text class="movie-title-text">{{item.title}}</text>
+                </view>
+                <image class="movie-cover" wx:if="{{item.cover}}" src="{{item.cover}}" mode="scaleToFill"></image>
+                <view class="movie-score" wx:if="{{item.cover}}">
                     <text>{{item.score || '无'}}</text>
                 </view>
             </view>
@@ -75,7 +91,8 @@
                     let movies = this.data.movies.concat(moreMovies);
                     this.movies = movies;
                     this.lastId = lastId;
-                    this.setData({ movies, lastId })
+//                    this.setData({ movies, lastId });
+                    this.$apply();
                 }
             }
         };
