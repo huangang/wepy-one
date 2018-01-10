@@ -2,7 +2,7 @@ import wepy from 'wepy';
 
 const host = 'http://v3.wufazhuce.com:8000';
 const wxRequest = async (params = {}, url) => {
-    wx.showToast({
+    wepy.showToast({
       title: '加载中',
       icon: 'loading'
     });
@@ -13,7 +13,7 @@ const wxRequest = async (params = {}, url) => {
         data: params.data || {},
         header: {'Content-Type': 'application/json'},
     });
-    wx.hideToast();
+    wepy.hideToast();
     return res;
 };
 

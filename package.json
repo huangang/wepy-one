@@ -13,14 +13,16 @@
   "dependencies": {
     "babel-plugin-syntax-export-extensions": "^6.13.0",
     "babel-plugin-transform-export-extensions": "^6.8.0",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-stage-1": "^6.16.0",
     "babel-runtime": "^6.22.0",
-    "wepy": "^1.5.8",
+    "wepy": "^1.6.0",
     "wepy-async-function": "^1.4.4",
     "wepy-com-toast": "^1.0.0",
     "wepy-compiler-babel": "^1.3.7",
-    "wepy-compiler-less": "^1.3.6"
+    "wepy-compiler-less": "^1.3.6",
+    "wepy-web": "^1.5.9"
   },
   "devDependencies": {
     "wepy-compiler-sass": "^1.3.7",
